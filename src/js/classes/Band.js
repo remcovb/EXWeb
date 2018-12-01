@@ -8,7 +8,6 @@ class Band {
     this.mesh.name = `bandArm`;    
     this.mesh.position.set(pos, 0, 0);
 
-    console.log(pos);
     
 
 
@@ -23,7 +22,6 @@ class Band {
       arm = new THREE.Mesh(geometry, armMaterial);
       geometry.computeVertexNormals();
       this.mesh.add(arm);
-      console.log(arm.material.color);
 
     });
 
@@ -40,7 +38,6 @@ class Band {
       band = new THREE.Mesh(geometry, bandMaterial);
       geometry.computeVertexNormals();
       this.mesh.add(band);  
-      console.log(band.material.color);
     
     });
 

@@ -1,4 +1,6 @@
 const THREE = require(`three`);
+import Hand from './classes/Hand.js';
+
 
 let container,
   renderer,
@@ -11,7 +13,8 @@ let container,
   WIDTH,
   HEIGHT;
 
-let hand;
+let hand, totalLength;
+const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
@@ -25,7 +28,6 @@ const aantalBandjes = [
     concertRating: `good`
   }];
 
-import Hand from './classes/Hand.js';
 
 
 
@@ -140,6 +142,8 @@ const threeInit = () => {
   createScene();
   createLights();
   createHand();
+
+
   loop();
 };
 
@@ -163,7 +167,7 @@ const createScene = () => {
   );
 
   //camera positioneren
-  camera.position.x = 0;
+  camera.position.x = 20;
   camera.position.y = 100;
   camera.position.z = 200;
 
@@ -215,12 +219,39 @@ const createHand = () => {
   hand.mesh.scale.set(.25, .25, .25);
   hand.mesh.rotation.x = - Math.PI / 2;
   hand.mesh.position.y = 100;
-  scene.add(hand.mesh);
+  scene.add(hand.mesh);  
   addBandjes();
 };
 
 const addBandjes = () => {
   hand.addBand(aantalBandjes);
+
+  totalLength = (handSize + (aantalBandjes.length * 80)) / 4;
+  console.log(totalLength);
+  
+
+  if (totalLength > 150) {
+    container.addEventListener(`wheel`, handleMouseMove);
+  }
+};
+
+const handleMouseMove = e => {
+  e.preventDefault();  
+  camera.position.x -= event.deltaY * 0.05; 
+
+  console.log(camera.position.x);
+  console.log(totalLength);
+  
+
+  if (camera.position.x >= 40) {
+    camera.position.x = 40;
+  }
+
+  if (camera.position.x <= - totalLength + 150) {
+    camera.position.x = - totalLength + 150;
+  }
+
+
 };
 
 const loop = () => {

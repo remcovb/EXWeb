@@ -20,7 +20,10 @@ class Band {
         name: `armMat`
       });
       arm = new THREE.Mesh(geometry, armMaterial);
+      arm.name = `arm`;
       geometry.computeVertexNormals();
+      geometry.computeBoundingBox();      
+
       this.mesh.add(arm);
 
     });
@@ -36,8 +39,12 @@ class Band {
         name: `bandMat`
       });
       band = new THREE.Mesh(geometry, bandMaterial);
+      band.name = `band`;
+      band.info = b;
       geometry.computeVertexNormals();
-      this.mesh.add(band);  
+      geometry.computeBoundingBox();   
+      
+      this.mesh.add(band); 
     
     });
 

@@ -1,5 +1,7 @@
 const THREE = require(`three`);
 import Hand from './classes/Hand.js';
+//import Band from './classes/Band.js';
+
 
 
 let container,
@@ -11,7 +13,10 @@ let container,
   far,
   scene,
   WIDTH,
-  HEIGHT;
+  HEIGHT,
+  rayCaster,
+  mouseVector,
+  intersects;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -143,14 +148,17 @@ const threeInit = () => {
   createLights();
   createHand();
 
-
   loop();
+
 };
 
 const createScene = () => {
   //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
+
+  console.log(HEIGHT);
+  
 
 
   scene = new THREE.Scene();
@@ -192,7 +200,7 @@ const createScene = () => {
   container.appendChild(renderer.domElement);
 
   window.addEventListener(`resize`, handleWindowResize, false);
-
+  projectorStart();
 };
 
 const handleWindowResize = () => {
@@ -235,18 +243,19 @@ const createHand = () => {
 };
 
 const addBandjes = () => {
-  hand.addBand(aantalBandjes);
+  hand.addBand(aantalBandjes);    
+
 
   totalLength = (handSize + (aantalBandjes.length * 80)) / 4;
   console.log(totalLength);
   
 
   if (totalLength > 150) {
-    container.addEventListener(`wheel`, handleMouseMove);
+    container.addEventListener(`wheel`, handleScroll);
   }
 };
 
-const handleMouseMove = e => {
+const handleScroll = e => {
   e.preventDefault();  
   camera.position.x -= event.deltaY * 0.05; 
 
@@ -270,5 +279,55 @@ const loop = () => {
 
   renderer.render(scene, camera);
 
+};
+
+const projectorStart = () => {
+  rayCaster = new THREE.Raycaster();
+  console.log(rayCaster);  
+  
+  mouseVector = new THREE.Vector3();
+  console.log(mouseVector);
+  
+
+  container.addEventListener(`mousemove`, onMouseMove);
+};
+
+const onMouseMove = e => {
+  //console.log(e);
+  
+  mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
+  mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
+  //console.log(mouseVector.x, mouseVector.y);
+
+  rayCaster.setFromCamera(mouseVector, camera);
+  intersects = rayCaster.intersectObjects(hand.mesh.children, true);
+  //console.log(hand.mesh.children);
+  
+  //console.log(intersects);
+  
+  if (intersects.length !== 0) {
+    document.addEventListener(`click`, detailEvent);
+  } else {
+    return;
+  }
+
+  
+  
+};
+
+const detailEvent = () => {
+  console.log(`click`);
+  
+  console.log(intersects);
+  
+  for (let i = 0;i < intersects.length;i ++) {
+    if (intersects[i].object.name === `band`) {
+      console.log(`found`);
+      console.log(intersects[i].object.info);
+      
+        
+      break;
+    }
+  }
 };
 

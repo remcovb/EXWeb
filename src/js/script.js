@@ -83,6 +83,7 @@ $logout.addEventListener(`click`, () => {
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
+    console.log(firebaseUser);
     $logout.classList.remove(`hide`);
     $signup.classList.add(`hide`);
     $login.classList.add(`hide`);
@@ -154,4 +155,6 @@ const readData = user => {
 };
 
 
+
+};
 

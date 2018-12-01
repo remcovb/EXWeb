@@ -1,7 +1,40 @@
+const THREE = require(`three`);
+
+let container,
+  renderer,
+  camera,
+  fieldOfView,
+  aspectRatio,
+  near,
+  far,
+  scene,
+  WIDTH,
+  HEIGHT;
+
+let hand;
+
+let hemisphereLight, shadowLight;
+
+const aantalBandjes = [
+  {
+    concertName: `concert1`,
+    concertRating: `good`
+  },
+  {
+    concertName: `concert2`,
+    concertRating: `good`
+  }];
+
+import Hand from './classes/Hand.js';
+
+
+
+//FIREBASE
 //Als er een fout zit in de facebook login is dit waarschijnlijk
 //de URL die moet aangepast worden in Facebook developer site
 
 import firebase from 'firebase';
+// import {loopback} from 'ip';
 
 const config = {
   apiKey: `AIzaSyCxaRTBqAwRJQ5objXspjTbxBcTp-YnARg`,
@@ -71,7 +104,7 @@ $logout.addEventListener(`click`, () => {
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
-    console.log(firebaseUser);
+    //  console.log(firebaseUser);
     $logout.classList.remove(`hide`);
     $signup.classList.add(`hide`);
     $login.classList.add(`hide`);
@@ -98,6 +131,102 @@ const welcome = user => {
   } else {
     $welcome.innerHTML = `Welgekomen ${user.email}`;
   }
+
+  threeInit();
+
+};
+
+const threeInit = () => {
+  createScene();
+  createLights();
+  createHand();
+  loop();
+};
+
+const createScene = () => {
+  //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
+  WIDTH = window.innerWidth;
+  HEIGHT = window.innerHeight;
+
+
+  scene = new THREE.Scene();
+
+  aspectRatio = WIDTH / HEIGHT;
+  fieldOfView = 60;
+  near = 1;
+  far = 10000;
+  camera = new THREE.PerspectiveCamera(
+    fieldOfView,
+    aspectRatio,
+    near,
+    far
+  );
+
+  //camera positioneren
+  camera.position.x = 0;
+  camera.position.y = 100;
+  camera.position.z = 200;
+
+  //renderer maken
+  renderer = new THREE.WebGLRenderer({
+    // Allow transparency to show the gradient background
+    // we defined in the CSS
+    alpha: true,
+
+    // Activate the anti-aliasing; this is less performant,
+    // but, as our project is low-poly based, it should be fine :)
+    antialias: true 
+
+  });
+
+        //set size of renderer
+  renderer.setSize(WIDTH, HEIGHT);
+
+        //enable shadow rendering
+
+  container = document.querySelector(`.canvas`);
+  container.appendChild(renderer.domElement);
+};
+
+const createLights = () => {
+          //hemispherelight maken
+  hemisphereLight = new THREE.AmbientLight(0xaaaaaa, 0x000000, .9);
+
+          //shadowlight
+  shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+  
+          //positie lichtbron
+  shadowLight.position.set(150, 350, 350);
+  
+          //shadowcasting toelaten
+  shadowLight.castShadow = true;
+  
+          //resolution definen
+  shadowLight.shadow.mapSize.width = 2048;
+  shadowLight.shadow.mapSize.height = 2048;
+  
+          //light activeren
+  scene.add(hemisphereLight);
+  scene.add(shadowLight);
+};
+
+const createHand = () => {
+  hand = new Hand();
+  hand.mesh.scale.set(.25, .25, .25);
+  hand.mesh.rotation.x = - Math.PI / 2;
+  hand.mesh.position.y = 100;
+  scene.add(hand.mesh);
+  addBandjes();
+};
+
+const addBandjes = () => {
+  hand.addBand(aantalBandjes);
+};
+
+const loop = () => {
+  requestAnimationFrame(loop);
+
+  renderer.render(scene, camera);
 
 };
 

@@ -4,37 +4,42 @@ import Band from './Band.js';
 class Hand {
   constructor() {
     this.mesh = new THREE.Object3D();
+    this.mesh.name = `hand`;
     const material = new THREE.MeshPhongMaterial({
       color: 0xCC9B7C
     });
+
+
 
     const loader = new THREE.JSONLoader();
     loader.load(`../../assets/objects/hand.json`, geometry => {
     
       const object = new THREE.Mesh(geometry, material);
       geometry.computeVertexNormals();
-
-      this.mesh.add(object);
-      console.log(object.position);
+      geometry.computeBoundingBox();      
+      console.log(object.geometry.boundingBox.max.x - object.geometry.boundingBox.min.x);
       
-    });
-  }
-  addBand(bandjes) {
-    //console.log(this.mesh.matrixWorld);
+      this.mesh.add(object);
 
+      // box = object.geometry.boundingBox;
+      
+    });  
+
+
+
+    
+  }
+
+  
+  addBand(bandjes) {
     let pos = 0;
     bandjes.forEach(b => {
       const band = new Band(b, pos);
-      console.log(band.mesh.position);
       this.mesh.add(band.mesh);  
 
-      pos = pos - 140;
+      pos = pos - 80;
       
-    });
-
-
-    // console.log(band.mesh);
-      
+    });      
   }
 }
 

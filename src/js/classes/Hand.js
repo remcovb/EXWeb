@@ -17,8 +17,9 @@ class Hand {
       const object = new THREE.Mesh(geometry, material);
       geometry.computeVertexNormals();
       geometry.computeBoundingBox();      
-      console.log(object.geometry.boundingBox.max.x - object.geometry.boundingBox.min.x);
-      
+      //console.log(object.geometry.boundingBox.max.x - object.geometry.boundingBox.min.x);
+      console.log(object);
+       
       this.mesh.add(object);
 
       // box = object.geometry.boundingBox;
@@ -35,6 +36,7 @@ class Hand {
     let pos = 0;
     bandjes.forEach(b => {
       const band = new Band(b, pos);
+      
       this.mesh.add(band.mesh);  
 
       pos = pos - 80;

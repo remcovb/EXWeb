@@ -190,6 +190,17 @@ const createScene = () => {
 
   container = document.querySelector(`.canvas`);
   container.appendChild(renderer.domElement);
+
+  window.addEventListener(`resize`, handleWindowResize, false);
+
+};
+
+const handleWindowResize = () => {
+  HEIGHT = window.innerHeight;
+  WIDTH = window.innerWidth;
+  renderer.setSize(WIDTH, HEIGHT);
+  camera.aspect = WIDTH / HEIGHT;
+  camera.updateProjectionMatrix();
 };
 
 const createLights = () => {

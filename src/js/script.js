@@ -19,6 +19,7 @@ const db = firebase.database();
 
 
 
+
 const $welcome = document.querySelector(`.welcome`);
 const $email = document.querySelector(`.email`);
 const $password = document.querySelector(`.password`);
@@ -30,6 +31,9 @@ const $user = document.querySelector(`.user`);
 const $band = document.querySelector(`.band`);
 const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
+const $upload = document.querySelector(`.upload`);
+
+console.log($upload);
 
 
 
@@ -122,19 +126,62 @@ const welcome = user => {
 
 };
 
+$upload.addEventListener(`change`, e => {
+  const file = e.target.files[0];
+
+  const fileName = file.name.split(` `).join(``);
+
+  console.log(fileName);
+
+
+
+
+  const storage = firebase.storage().ref(`${fileName}`);
+
+  storage.put(file);
+});
+
+
+
 const databaseUser = userData => {
+
 
   $bandSubmit.addEventListener(`click`, () => {
 
     const bandName = $band.value;
+    const date = $calender.value;
+
+    $upload.addEventListener(`change`, e => {
+      const file = e.target.files[0];
+
+      //const fileName = file.name.split(` `).join(``);
+
+      //console.log(fileName);
+
+      console.log(userData.uid);
+
+
+
+
+
+      const storage = firebase.storage().ref().child(`test/${file}`);
+
+      storage.put(file);
+    });
+
+
+
 
     console.log($calender);
 
     const newPostKey = db.ref().push().key;
 
-    db.ref(`users/${userData.uid}/${newPostKey}`).set({
-      band: bandName
+    db.ref(`users / ${userData.uid} / ${newPostKey}`).set({
+      band: bandName,
+      date: date
     });
+
+    location.reload();
 
   });
 
@@ -143,14 +190,25 @@ const databaseUser = userData => {
 };
 
 const readData = user => {
-  const starCountRef = db.ref(`users/${user.uid}`);
+  const starCountRef = db.ref(`users / ${user.uid}`);
   console.log(starCountRef);
 
-  starCountRef.on(`value`, snap =>
+  starCountRef.on(`value`, snap => {
 
-    console.log(snap.val())
+    for (const key in snap.val()) {
+      const keydata = snap.val()[key];
+      console.log(keydata.band);
+      const band = document.createElement(`p`);
+      band.innerHTML = keydata.band;
 
-  );
+
+      $welcome.appendChild(band);
+
+    }
+
+
+
+  });
 };
 
 

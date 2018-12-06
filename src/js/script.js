@@ -16,7 +16,9 @@ let container,
   HEIGHT,
   rayCaster,
   mouseVector,
-  intersects;
+  intersects,
+  finalFile,
+  file;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -70,6 +72,7 @@ const $user = document.querySelector(`.user`);
 const $band = document.querySelector(`.band`);
 const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
+const $upload = document.querySelector(`.upload`);
 
 
 
@@ -117,6 +120,7 @@ $signup.addEventListener(`click`, () => {
 
 $logout.addEventListener(`click`, () => {
   firebase.auth().signOut();
+  location.reload();
 });
 
 //Realtime listener
@@ -163,35 +167,105 @@ const welcome = user => {
 
 };
 
+$upload.addEventListener(`change`, e => {
+
+  file = e.target.files[0];
+
+  const fileName = file.name.split(` `).join(``);
+
+  finalFile = fileName;
+
+  console.log(fileName);
+
+});
+
+
+
+
+
 const databaseUser = userData => {
+
+  console.log(file);
+
 
   $bandSubmit.addEventListener(`click`, () => {
 
+
+
+
+
     const bandName = $band.value;
+    const date = $calender.value;
+
+
+
+
+
+    console.log(finalFile);
+    console.log(file);
+
+
+    const storage = firebase.storage();
+
+
+    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+
+    storageRef.child(`${userData.uid}/${finalFile}`);
+    console.log(finalFile);
+
+
+
+    storageRef.put(file).then(snapshot => {
+      console.log(snapshot);
+    });
+
+
+
+
+
+
 
     console.log($calender);
 
     const newPostKey = db.ref().push().key;
 
     db.ref(`users/${userData.uid}/${newPostKey}`).set({
-      band: bandName
+      band: bandName,
+      date: date,
+      img: finalFile
     });
 
+    // location.reload();
   });
 
 
   $user.innerHTML = userData.uid;
+
 };
 
 const readData = user => {
-  const starCountRef = db.ref(`users/${user.uid}`);
-  console.log(starCountRef);
 
-  starCountRef.on(`value`, snap =>
+  const starCountRef = db.ref(`users / ${user.uid}`);
 
-    console.log(snap.val())
 
-  );
+  starCountRef.on(`value`, snap => {
+
+
+    for (const key in snap.val()) {
+      const keydata = snap.val()[key];
+      console.log(keydata);
+      console.log(keydata.band);
+      const band = document.createElement(`p`);
+      band.innerHTML = keydata.band;
+
+
+      $welcome.appendChild(band);
+
+    }
+
+
+
+  });
 };
 
 const threeInit = () => {

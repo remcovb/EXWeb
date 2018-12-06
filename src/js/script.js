@@ -258,9 +258,6 @@ const addBandjes = () => {
 const handleScroll = e => {
   e.preventDefault();  
   camera.position.x -= event.deltaY * 0.05; 
-
-  console.log(camera.position.x);
-  console.log(totalLength);
   
 
   if (camera.position.x >= 40) {

@@ -1,7 +1,47 @@
+const THREE = require(`three`);
+import Hand from './classes/Hand.js';
+//import Band from './classes/Band.js';
+
+
+
+let container,
+  renderer,
+  camera,
+  fieldOfView,
+  aspectRatio,
+  near,
+  far,
+  scene,
+  WIDTH,
+  HEIGHT,
+  rayCaster,
+  mouseVector,
+  intersects;
+
+let hand, totalLength;
+const handSize = 615.891;
+
+let hemisphereLight, shadowLight;
+
+const aantalBandjes = [
+  {
+    concertName: `concert1`,
+    concertRating: `good`
+  },
+  {
+    concertName: `concert2`,
+    concertRating: `good`
+  }];
+
+
+
+
+//FIREBASE
 //Als er een fout zit in de facebook login is dit waarschijnlijk
 //de URL die moet aangepast worden in Facebook developer site
 
 import firebase from 'firebase';
+// import {loopback} from 'ip';
 
 
 const config = {
@@ -83,7 +123,7 @@ $logout.addEventListener(`click`, () => {
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
-    console.log(firebaseUser);
+    //  console.log(firebaseUser);
     $logout.classList.remove(`hide`);
     $signup.classList.add(`hide`);
     $login.classList.add(`hide`);
@@ -118,7 +158,7 @@ const welcome = user => {
 
   databaseUser(user);
   readData(user);
-
+  threeInit();
 
 
 };
@@ -154,7 +194,188 @@ const readData = user => {
   );
 };
 
+const threeInit = () => {
+  createScene();
+  createLights();
+  createHand();
+
+  loop();
+
+};
+
+const createScene = () => {
+  //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
+  WIDTH = window.innerWidth;
+  HEIGHT = window.innerHeight;
+
+  console.log(HEIGHT);
 
 
+
+  scene = new THREE.Scene();
+
+  aspectRatio = WIDTH / HEIGHT;
+  fieldOfView = 60;
+  near = 1;
+  far = 10000;
+  camera = new THREE.PerspectiveCamera(
+    fieldOfView,
+    aspectRatio,
+    near,
+    far
+  );
+
+  //camera positioneren
+  camera.position.x = 20;
+  camera.position.y = 100;
+  camera.position.z = 200;
+
+  //renderer maken
+  renderer = new THREE.WebGLRenderer({
+    // Allow transparency to show the gradient background
+    // we defined in the CSS
+    alpha: true,
+
+    // Activate the anti-aliasing; this is less performant,
+    // but, as our project is low-poly based, it should be fine :)
+    antialias: true
+
+  });
+
+  //set size of renderer
+  renderer.setSize(WIDTH, HEIGHT);
+
+  //enable shadow rendering
+
+  container = document.querySelector(`.canvas`);
+  container.appendChild(renderer.domElement);
+
+  window.addEventListener(`resize`, handleWindowResize, false);
+  projectorStart();
+};
+
+const handleWindowResize = () => {
+  HEIGHT = window.innerHeight;
+  WIDTH = window.innerWidth;
+  renderer.setSize(WIDTH, HEIGHT);
+  camera.aspect = WIDTH / HEIGHT;
+  camera.updateProjectionMatrix();
+};
+
+const createLights = () => {
+  //hemispherelight maken
+  hemisphereLight = new THREE.AmbientLight(0xaaaaaa, 0x000000, .9);
+
+  //shadowlight
+  shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+
+  //positie lichtbron
+  shadowLight.position.set(150, 350, 350);
+
+  //shadowcasting toelaten
+  shadowLight.castShadow = true;
+
+  //resolution definen
+  shadowLight.shadow.mapSize.width = 2048;
+  shadowLight.shadow.mapSize.height = 2048;
+
+  //light activeren
+  scene.add(hemisphereLight);
+  scene.add(shadowLight);
+};
+
+const createHand = () => {
+  hand = new Hand();
+  hand.mesh.scale.set(.25, .25, .25);
+  hand.mesh.rotation.x = - Math.PI / 2;
+  hand.mesh.position.y = 100;
+  scene.add(hand.mesh);
+  addBandjes();
+};
+
+const addBandjes = () => {
+  hand.addBand(aantalBandjes);
+
+
+  totalLength = (handSize + (aantalBandjes.length * 80)) / 4;
+  console.log(totalLength);
+
+
+  if (totalLength > 150) {
+    container.addEventListener(`wheel`, handleScroll);
+  }
+};
+
+const handleScroll = e => {
+  e.preventDefault();
+  camera.position.x -= event.deltaY * 0.05;
+
+
+  if (camera.position.x >= 40) {
+    camera.position.x = 40;
+  }
+
+  if (camera.position.x <= - totalLength + 150) {
+    camera.position.x = - totalLength + 150;
+  }
+
+
+};
+
+const loop = () => {
+  requestAnimationFrame(loop);
+
+  renderer.render(scene, camera);
+
+};
+
+const projectorStart = () => {
+  rayCaster = new THREE.Raycaster();
+  console.log(rayCaster);
+
+  mouseVector = new THREE.Vector3();
+  console.log(mouseVector);
+
+
+  container.addEventListener(`mousemove`, onMouseMove);
+};
+
+const onMouseMove = e => {
+  //console.log(e);
+
+  mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
+  mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
+  //console.log(mouseVector.x, mouseVector.y);
+
+  rayCaster.setFromCamera(mouseVector, camera);
+  intersects = rayCaster.intersectObjects(hand.mesh.children, true);
+  //console.log(hand.mesh.children);
+
+  //console.log(intersects);
+
+  if (intersects.length !== 0) {
+    document.addEventListener(`click`, detailEvent);
+  } else {
+    return;
+  }
+
+
+
+};
+
+const detailEvent = () => {
+  console.log(`click`);
+
+  console.log(intersects);
+
+  for (let i = 0;i < intersects.length;i ++) {
+    if (intersects[i].object.name === `band`) {
+      console.log(`found`);
+      console.log(intersects[i].object.info);
+
+
+      break;
+    }
+  }
 };
 

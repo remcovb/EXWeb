@@ -1,7 +1,123 @@
+@import 'reset.css';
+
+.login-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('../assets/img/bg-login.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .hide {
   display: none;
+  height: 0;
+}
+
+.input {
+  width: 30rem;
+  margin-top: 2rem;
+  height: 2rem;
+}
+
+.email {
+  height: 3rem;
+  padding-bottom: 0.7rem;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 500;
+  border-bottom: 0.4rem solid #4a00e0;
+  &::placeholder {
+    color: white;
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.password {
+  height: 3rem;
+  background-color: transparent;
+  padding-bottom: 0.7rem;
+  margin-top: 3rem;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 500;
+  border-bottom: 0.4rem solid #4a00e0;
+  &::placeholder {
+    color: white;
+    opacity: 0.7;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.login-buttons {
+  display: flex;
+  flex-flow: column;
+  margin-top: 2rem;
+}
+
+.btn {
+  background: linear-gradient(to left, #8e2de2, #4a00e0);
+  color: white;
+  height: 4rem;
+  font-size: 1.6rem;
+  border: none;
+  border-radius: 2rem;
+  font-weight: bold;
+}
+
+.facebook {
+  z-index: 1;
+}
+
+.facebook::before {
+  content: '';
+  position: absolute;
+  background-image: url('../assets/img/fb-logo.png');
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  margin-left: -3.5rem;
 }
 
 .canvas {
   position: absolute;
+}
+
+.signedin {
+  background-color: #1c1c1e;
+}
+
+.welcome {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.upload-btn-wrapper input[type='file'] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
 }

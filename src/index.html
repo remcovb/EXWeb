@@ -1,39 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+    <title>Festival</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-  <title>Festival</title>
-</head>
+  <body>
+    <div class="login-container">
+      <input class="email-input email input" type="email" placeholder="Email" />
 
-<body>
+      <input
+        class="password-input password input"
+        type="password"
+        placeholder="Password"
+      />
+      <div class="login-buttons">
+        <button class="btn btn-action login input">Log in</button>
+        <button class="btn btn-secondary signup input">Sign up</button>
+        <button class="btn btn-action facebook input">Facebook</button>
+      </div>
+    </div>
 
-  <div>
-    <h1 class="welcome"></h1>
-    <h2 class="user"></h2>
-    <input class="email-input email" type="email" placeholder="Email">
+    <div class="signedin">
+      <h1 class="welcome"></h1>
+      <button class="btn btn-action hide logout">Log out</button>
 
-    <input class="password-input password" type="password" placeholder="Password">
+      <input class="band hide" type="text" placeholder="bands" />
+      <input
+        type="date"
+        class="calender hide"
+        name="trip-start"
+        value="2018-07-22"
+        min="2018-01-01"
+        max="2018-12-31"
+      />
 
+      <div class="upload-btn-wrapper">
+        <button class="btn">Upload a file</button>
+        <input type="file" class="upload hide" />
+      </div>
+      <button class="btn band-button hide">voeg band toe</button>
 
-    <button class="btn btn-action login">Log in</button>
-    <button class="btn btn-secondary signup">Sign up</button>
-    <button class="btn btn-action facebook">facebook</button>
-    <button class="btn btn-action hide logout">Log out</button>
-
-    <input class="band hide" type="text" placeholder="bands">
-    <input type="date" class="calender" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31">
-    <input type="file" class="upload">
-    <button class="band-button hide">voeg band toe</button>
-
-
-
-  </div>
-  <div class="canvas"></div>
-
-</body>
-
+      <ul class="list"></ul>
+      <div class="canvas"></div>
+    </div>
+  </body>
 </html>

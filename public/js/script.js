@@ -28,6 +28,32 @@ const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
+const search = `https://itunes.apple.com/search?term=jack+johnson&limit=1`;
+
+const getJSON = (url, callback) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open(`GET`, url, true);
+  xhr.responseType = `jsonp`;
+  xhr.onload = () => {
+    const status = xhr.status;
+    if (status === 200) {
+      callback(null, xhr.response);
+    } else {
+      callback(status, xhr.response);
+    }
+  };
+  xhr.send();
+  console.log(xhr);
+  
+};
+
+const parseIt = data => {
+  const result = JSON.parse(data);
+  console.log(result.results[0].previewUrl);
+  
+};
+  
+
 const aantalBandjes = [
   {
     concertName: `concert1`,
@@ -378,4 +404,16 @@ const detailEvent = () => {
     }
   }
 };
+
+const init = () => {
+  getJSON(search, (err, data) => {
+    if (err !== null) {
+      console.log(`Something went wrong: ${err}`);
+    } else {
+      parseIt(data);
+    }
+  });
+};
+
+init();
 

@@ -21,7 +21,8 @@ let container,
   file,
   keydata,
   dataFromUser,
-  globStorageRef;
+  isPlaying = false,
+  fileExists;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -52,7 +53,16 @@ const getJSON = (url, callback) => {
 
 const parseIt = data => {
   const result = JSON.parse(data);
-  return result.results[0].previewUrl;
+  
+  
+  if (result.resultCount != 0) {
+    fileExists = true;
+    return result.results[0].previewUrl;    
+  } else {
+    console.log(`artist not in itunes library`);
+    fileExists = false;
+    return; 
+  }
 };
 
 const aantalBandjes = [];
@@ -194,7 +204,6 @@ const databaseUser = userData => {
     const storage = firebase.storage();
 
     storageRef = storage.ref(`${userData.uid}/${finalFile}`);
-    globStorageRef = storageRef;
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
@@ -433,7 +442,6 @@ const createWave = (songLink, concert) => {
 
   storageRef = storage.ref(`${dataFromUser.uid}`);
 
-  console.log(storageRef);
   
   storageRef.child(concert.img).getDownloadURL().then(url => {
     detailBandPic.src = url;
@@ -445,35 +453,41 @@ const createWave = (songLink, concert) => {
   waveCanvas.classList.add(`waveForm`);
   waveCanvas.id = `waveform`;
 
-  // const playPause = document.createElement(`p`);
-  // playPause.classList.add(`btn`);
-  // playPause.innerHTML = `play`;
-  // playPause.onclick = playOrPause;
+  const playPauseBtn = document.createElement(`a`);
+  playPauseBtn.classList.add(`btn`);
+  playPauseBtn.innerHTML = `play`;
+  playPauseBtn.onclick = playOrPause;
 
   concertDetail.appendChild(waveCanvas);
 
-  wavesurfer = WaveSurfer.create({
-    container: `#waveform`
-  });
 
+  if (fileExists === true) {
+    wavesurfer = WaveSurfer.create({
+      container: `#waveform`
+    });  
+    
+    wavesurfer.load(songLink);
+  
+    wavesurfer.on(`ready`, () => {
+      concertDetail.appendChild(playPauseBtn);
+      playPauseBtn.addEventListener(`click`, playOrPause);
+    });  
+  }
 
-  wavesurfer.load(songLink);
-
-  //concertDetail.appendChild(playPause);
-  //playPause.addEventListener(`click`, playOrPause);
-
-
-  // wavesurfer.on(`ready`, () => {
-  //   wavesurfer.play();
-  // })
-}
+};
 
 const playOrPause = e => {
-      // e.preventDefault;
-      console.log(e);
-      wavesurfer.on(`ready`, () => {
-      wavesurfer.play();
-    });
+      e.preventDefault;
+      
+      if (isPlaying = false) {
+        console.log(e);
+        wavesurfer.play(); 
+        isPlaying = true;       
+      } else {
+        wavesurfer.pause(); 
+        isPlaying = true;     
+      }
+
 }
 
 const init = () => {

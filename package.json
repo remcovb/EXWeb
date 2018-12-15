@@ -6,7 +6,6 @@
     "serve": "ws -d ./dist -c -p 3000 ",
     "clean": "rimraf ./dist",
     "production": "npm run clean && NODE_ENV=production webpack -p",
-    "start": "nodemon server.js"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
@@ -46,6 +45,5 @@
   },
   "dependencies": {
     "firebase": "^5.5.9",
-    "nodemon": "^1.18.9"
   }
 }

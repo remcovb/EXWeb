@@ -7,7 +7,6 @@ import Hand from './classes/Hand.js';
 
 // import firebase from 'firebase';
 
-
 let container,
   renderer,
   camera,
@@ -22,7 +21,8 @@ let container,
   mouseVector,
   intersects,
   finalFile,
-  file;
+  file,
+  keydata;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -45,26 +45,14 @@ const getJSON = (url, callback) => {
   };
   xhr.send();
   console.log(xhr);
-  
 };
 
 const parseIt = data => {
   const result = JSON.parse(data);
   console.log(result.results[0].previewUrl);
-  
 };
-  
 
-const aantalBandjes = [
-  {
-    concertName: `concert1`,
-    concertRating: `good`
-  },
-  {
-    concertName: `concert2`,
-    concertRating: `good`
-  }
-];
+const aantalBandjes = [];
 
 //FIREBASE
 //Als er een fout zit in de facebook login is dit waarschijnlijk
@@ -179,8 +167,6 @@ const welcome = user => {
 
   databaseUser(user);
   readData(user);
-
-  
 };
 
 $upload.addEventListener(`change`, e => {
@@ -193,12 +179,7 @@ $upload.addEventListener(`change`, e => {
   console.log(fileName);
 });
 
-
-
-
 const databaseUser = userData => {
-  console.log(file);
-
   $bandSubmit.addEventListener(`click`, () => {
     const bandName = $band.value;
     const date = $calender.value;
@@ -238,17 +219,19 @@ const readData = user => {
 
   starCountRef.on(`value`, snap => {
     for (const key in snap.val()) {
-      const keydata = snap.val()[key];
-      console.log(keydata);
-      console.log(keydata.band);
+      keydata = snap.val()[key];
+      aantalBandjes.push(keydata);
+
       const band = document.createElement(`li`);
       band.innerHTML = keydata.band;
 
       $list.appendChild(band);
     }
+
+    threeInit();
+    console.log(aantalBandjes);
   });
 };
-
 
 //THREEJS
 
@@ -264,8 +247,6 @@ const createScene = () => {
   //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
-
-
 
   scene = new THREE.Scene();
 
@@ -343,13 +324,11 @@ const createHand = () => {
 };
 
 const addBandjes = () => {
+  console.log(aantalBandjes.length);
   hand.addBand(aantalBandjes);
-
 
   totalLength = (handSize + aantalBandjes.length * 80) / 4;
   console.log(totalLength);
-
-
 
   if (totalLength > 150) {
     container.addEventListener(`wheel`, handleScroll);
@@ -389,8 +368,7 @@ const onMouseMove = e => {
   //console.log(e);
 
   mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
-  mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
-
+  mouseVector.y = -(e.layerY / renderer.domElement.clientHeight) * 2 + 1;
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
@@ -420,10 +398,7 @@ const detailEvent = () => {
   }
 };
 
-
 const init = () => {
-  threeInit();
-
   getJSON(search, (err, data) => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);
@@ -434,5 +409,3 @@ const init = () => {
 };
 
 init();
-
-

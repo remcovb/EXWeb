@@ -1,6 +1,12 @@
 const THREE = require(`three`);
+const firebase = require(`firebase`);
+// import THREE from 'three';
+
+// const Hand = require(`./classes/Hand.js`);
 import Hand from './classes/Hand.js';
-//import Band from './classes/Band.js';
+
+// import firebase from 'firebase';
+
 
 let container,
   renderer,
@@ -23,6 +29,32 @@ const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
+const search = `https://itunes.apple.com/search?term=jack+johnson&limit=1`;
+
+const getJSON = (url, callback) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open(`GET`, url, true);
+  xhr.responseType = `jsonp`;
+  xhr.onload = () => {
+    const status = xhr.status;
+    if (status === 200) {
+      callback(null, xhr.response);
+    } else {
+      callback(status, xhr.response);
+    }
+  };
+  xhr.send();
+  console.log(xhr);
+  
+};
+
+const parseIt = data => {
+  const result = JSON.parse(data);
+  console.log(result.results[0].previewUrl);
+  
+};
+  
+
 const aantalBandjes = [
   {
     concertName: `concert1`,
@@ -38,7 +70,6 @@ const aantalBandjes = [
 //Als er een fout zit in de facebook login is dit waarschijnlijk
 //de URL die moet aangepast worden in Facebook developer site
 
-import firebase from 'firebase';
 // import {loopback} from 'ip';
 
 const config = {
@@ -148,7 +179,8 @@ const welcome = user => {
 
   databaseUser(user);
   readData(user);
-  threeInit();
+
+  
 };
 
 $upload.addEventListener(`change`, e => {
@@ -160,6 +192,9 @@ $upload.addEventListener(`change`, e => {
 
   console.log(fileName);
 });
+
+
+
 
 const databaseUser = userData => {
   console.log(file);
@@ -214,6 +249,9 @@ const readData = user => {
   });
 };
 
+
+//THREEJS
+
 const threeInit = () => {
   createScene();
   createLights();
@@ -227,7 +265,7 @@ const createScene = () => {
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
 
-  console.log(HEIGHT);
+
 
   scene = new THREE.Scene();
 
@@ -307,8 +345,11 @@ const createHand = () => {
 const addBandjes = () => {
   hand.addBand(aantalBandjes);
 
+
   totalLength = (handSize + aantalBandjes.length * 80) / 4;
   console.log(totalLength);
+
+
 
   if (totalLength > 150) {
     container.addEventListener(`wheel`, handleScroll);
@@ -336,10 +377,10 @@ const loop = () => {
 
 const projectorStart = () => {
   rayCaster = new THREE.Raycaster();
-  console.log(rayCaster);
+  //console.log(rayCaster);
 
   mouseVector = new THREE.Vector3();
-  console.log(mouseVector);
+  //console.log(mouseVector);
 
   container.addEventListener(`mousemove`, onMouseMove);
 };
@@ -348,8 +389,8 @@ const onMouseMove = e => {
   //console.log(e);
 
   mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
-  mouseVector.y = -(e.layerY / renderer.domElement.clientHeight) * 2 + 1;
-  //console.log(mouseVector.x, mouseVector.y);
+  mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
+
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
@@ -378,3 +419,20 @@ const detailEvent = () => {
     }
   }
 };
+
+
+const init = () => {
+  threeInit();
+
+  getJSON(search, (err, data) => {
+    if (err !== null) {
+      console.log(`Something went wrong: ${err}`);
+    } else {
+      parseIt(data);
+    }
+  });
+};
+
+init();
+
+

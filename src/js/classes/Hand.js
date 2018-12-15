@@ -1,4 +1,5 @@
 const THREE = require(`three`);
+
 import Band from './Band.js';
 
 class Hand {
@@ -18,7 +19,7 @@ class Hand {
       geometry.computeVertexNormals();
       geometry.computeBoundingBox();      
       //console.log(object.geometry.boundingBox.max.x - object.geometry.boundingBox.min.x);
-      console.log(object);
+      //onsole.log(object);
        
       this.mesh.add(object);
 

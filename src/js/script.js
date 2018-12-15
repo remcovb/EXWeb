@@ -1,11 +1,8 @@
 const THREE = require(`three`);
 const firebase = require(`firebase`);
-// import THREE from 'three';
+const WaveSurfer = require(`wavesurfer`);
 
-// const Hand = require(`./classes/Hand.js`);
 import Hand from './classes/Hand.js';
-
-// import firebase from 'firebase';
 
 let container,
   renderer,
@@ -29,7 +26,11 @@ const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
-let prevFileLink;
+/*Webaudio*/
+
+const concertCanvas = document.querySelector(`.concertCanvas`);
+
+let concertDetail, waveCanvas, wavesurfer;
 
 
 const getJSON = (url, callback) => {
@@ -45,7 +46,6 @@ const getJSON = (url, callback) => {
     }
   };
   xhr.send();
-  console.log(xhr);
 };
 
 const parseIt = data => {
@@ -357,10 +357,8 @@ const loop = () => {
 
 const projectorStart = () => {
   rayCaster = new THREE.Raycaster();
-  //console.log(rayCaster);
 
   mouseVector = new THREE.Vector3();
-  //console.log(mouseVector);
 
   container.addEventListener(`mousemove`, onMouseMove);
 };
@@ -373,9 +371,7 @@ const onMouseMove = e => {
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
-  //console.log(hand.mesh.children);
 
-  //console.log(intersects);
 
   if (intersects.length !== 0) {
     document.addEventListener(`click`, detailEvent);
@@ -385,9 +381,6 @@ const onMouseMove = e => {
 };
 
 const detailEvent = () => {
-  console.log(`click`);
-
-  console.log(intersects);
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object.name === `band`) {
@@ -397,11 +390,16 @@ const detailEvent = () => {
   }
 };
 
-const openConcertDetails = concert => {
-  waveForm(concert.band);
+const openConcertDetails = concert => {  
+  
+  if (concertCanvas.children.length > 0) { 
+    concertDetail.remove();
+  }
+
+  getSongUrl(concert.band);
 }
 
-const waveForm = band => {
+const getSongUrl = band => {
 
   console.log(band.replace(/ /g,"+"));
   const search = `https://itunes.apple.com/search?term=${band.replace(/ /g,"+")}&limit=1`;
@@ -409,14 +407,56 @@ const waveForm = band => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);
     } else {
-      prevFileLink = parseIt(data);
-      console.log(prevFileLink);
+      const prevFileLink = parseIt(data);
+      createWave(prevFileLink); 
     }
-  });  
+  });
+
+  
+}
+
+const createWave = songLink => {
+  concertDetail = document.createElement(`div`);
+  concertDetail.classList.add(`concertDetail`);
+  concertCanvas.appendChild(concertDetail);
+
+  waveCanvas = document.createElement(`div`);
+  waveCanvas.classList.add(`waveForm`);
+  waveCanvas.id = `waveform`;
+
+  // const playPause = document.createElement(`p`);
+  // playPause.classList.add(`btn`);
+  // playPause.innerHTML = `play`;
+  // playPause.onclick = playOrPause;
+
+  concertDetail.appendChild(waveCanvas);
+
+  wavesurfer = WaveSurfer.create({
+    container: `#waveform`
+  });
+
+
+  wavesurfer.load(songLink);
+
+  //concertDetail.appendChild(playPause);
+  //playPause.addEventListener(`click`, playOrPause);
+
+
+  // wavesurfer.on(`ready`, () => {
+  //   wavesurfer.play();
+  // })
+}
+
+const playOrPause = e => {
+      // e.preventDefault;
+      console.log(e);
+      wavesurfer.on(`ready`, () => {
+      wavesurfer.play();
+    });
 }
 
 const init = () => {
-
+ 
 };
 
 init();

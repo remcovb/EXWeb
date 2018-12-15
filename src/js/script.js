@@ -8,8 +8,6 @@ import Hand from './classes/Hand.js';
 // import firebase from 'firebase';
 
 
-
-
 let container,
   renderer,
   camera,
@@ -22,7 +20,9 @@ let container,
   HEIGHT,
   rayCaster,
   mouseVector,
-  intersects;
+  intersects,
+  finalFile,
+  file;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -63,17 +63,14 @@ const aantalBandjes = [
   {
     concertName: `concert2`,
     concertRating: `good`
-  }];
-
-
-
+  }
+];
 
 //FIREBASE
 //Als er een fout zit in de facebook login is dit waarschijnlijk
 //de URL die moet aangepast worden in Facebook developer site
 
 // import {loopback} from 'ip';
-
 
 const config = {
   apiKey: `AIzaSyCxaRTBqAwRJQ5objXspjTbxBcTp-YnARg`,
@@ -86,10 +83,7 @@ const config = {
 firebase.initializeApp(config);
 const db = firebase.database();
 
-
-
-
-
+const $home = document.querySelector(`.login-container`);
 const $welcome = document.querySelector(`.welcome`);
 const $email = document.querySelector(`.email`);
 const $password = document.querySelector(`.password`);
@@ -97,29 +91,22 @@ const $login = document.querySelector(`.login`);
 const $signup = document.querySelector(`.signup`);
 const $logout = document.querySelector(`.logout`);
 const $facebook = document.querySelector(`.facebook`);
-const $user = document.querySelector(`.user`);
 const $band = document.querySelector(`.band`);
 const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
-
-
-
+const $upload = document.querySelector(`.upload`);
+const $list = document.querySelector(`.list`);
 
 const provider = new firebase.auth.FacebookAuthProvider();
 //provider.addScope(`email`);
 
 $facebook.addEventListener(`click`, () => {
-
   const promise = firebase.auth().signInWithPopup(provider);
 
   promise.catch(e => console.log(e.message));
-
-
-
 });
 
 $login.addEventListener(`click`, () => {
-
   //get email and pass
   const email = $email.value;
   const password = $password.value;
@@ -129,25 +116,22 @@ $login.addEventListener(`click`, () => {
   const promise = auth.signInWithEmailAndPassword(email, password);
 
   promise.catch(e => console.log(e.message));
-
 });
 
 //signup
 $signup.addEventListener(`click`, () => {
-
   const email = $email.value;
   const password = $password.value;
   const auth = firebase.auth();
 
   const promise = auth.createUserWithEmailAndPassword(email, password);
 
-  promise
-    .then(user => console.log(user))
-    .catch(e => console.log(e.message));
+  promise.then(user => console.log(user)).catch(e => console.log(e.message));
 });
 
 $logout.addEventListener(`click`, () => {
   firebase.auth().signOut();
+  location.reload();
 });
 
 //Realtime listener
@@ -155,6 +139,7 @@ $logout.addEventListener(`click`, () => {
 firebase.auth().onAuthStateChanged(firebaseUser => {
   if (firebaseUser) {
     //  console.log(firebaseUser);
+    $home.classList.add(`hide`);
     $logout.classList.remove(`hide`);
     $signup.classList.add(`hide`);
     $login.classList.add(`hide`);
@@ -164,9 +149,12 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $band.classList.remove(`hide`);
     $bandSubmit.classList.remove(`hide`);
     $bandSubmit.classList.remove(`hide`);
+    $calender.classList.remove(`hide`);
+    $upload.classList.remove(`hide`);
 
     welcome(firebaseUser);
   } else {
+    $home.classList.remove(`remove`);
     $welcome.innerHTML = ``;
     $logout.classList.add(`hide`);
     $signup.classList.remove(`hide`);
@@ -176,50 +164,89 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $password.classList.remove(`hide`);
     $band.classList.add(`hide`);
     $bandSubmit.classList.add(`hide`);
+    $calender.classList.add(`hide`);
+    $upload.classList.add(`hide`);
     console.log(`not logged`);
   }
 });
 
 const welcome = user => {
   if (user.displayName) {
-    $welcome.innerHTML = `Welgekomen ${user.displayName}`;
+    $welcome.innerHTML = `Welkom ${user.displayName}`;
   } else {
-    $welcome.innerHTML = `Welgekomen ${user.email}`;
+    $welcome.innerHTML = `Welkom ${user.email}`;
   }
 
   databaseUser(user);
   readData(user);
+
+  
 };
 
+$upload.addEventListener(`change`, e => {
+  file = e.target.files[0];
+
+  const fileName = file.name.split(` `).join(``);
+
+  finalFile = fileName;
+
+  console.log(fileName);
+});
+
+
+
+
 const databaseUser = userData => {
+  console.log(file);
 
   $bandSubmit.addEventListener(`click`, () => {
-
     const bandName = $band.value;
+    const date = $calender.value;
+
+    console.log(finalFile);
+    console.log(file);
+
+    const storage = firebase.storage();
+
+    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+
+    storageRef.child(`${userData.uid}/${finalFile}`);
+    console.log(finalFile);
+
+    const task = storageRef.put(file);
+
+    task.then(function reload() {
+      location.reload();
+    });
 
     console.log($calender);
 
     const newPostKey = db.ref().push().key;
 
     db.ref(`users/${userData.uid}/${newPostKey}`).set({
-      band: bandName
+      band: bandName,
+      date: date,
+      img: finalFile
     });
 
+    // ;
   });
-
-
-  $user.innerHTML = userData.uid;
 };
 
 const readData = user => {
   const starCountRef = db.ref(`users/${user.uid}`);
-  console.log(starCountRef);
 
-  starCountRef.on(`value`, snap =>
+  starCountRef.on(`value`, snap => {
+    for (const key in snap.val()) {
+      const keydata = snap.val()[key];
+      console.log(keydata);
+      console.log(keydata.band);
+      const band = document.createElement(`li`);
+      band.innerHTML = keydata.band;
 
-    console.log(snap.val())
-
-  );
+      $list.appendChild(band);
+    }
+  });
 };
 
 
@@ -231,7 +258,6 @@ const threeInit = () => {
   createHand();
 
   loop();
-
 };
 
 const createScene = () => {
@@ -240,18 +266,14 @@ const createScene = () => {
   HEIGHT = window.innerHeight;
 
 
+
   scene = new THREE.Scene();
 
   aspectRatio = WIDTH / HEIGHT;
   fieldOfView = 60;
   near = 1;
   far = 10000;
-  camera = new THREE.PerspectiveCamera(
-    fieldOfView,
-    aspectRatio,
-    near,
-    far
-  );
+  camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, near, far);
 
   //camera positioneren
   camera.position.x = 20;
@@ -267,7 +289,6 @@ const createScene = () => {
     // Activate the anti-aliasing; this is less performant,
     // but, as our project is low-poly based, it should be fine :)
     antialias: true
-
   });
 
   //set size of renderer
@@ -292,10 +313,10 @@ const handleWindowResize = () => {
 
 const createLights = () => {
   //hemispherelight maken
-  hemisphereLight = new THREE.AmbientLight(0xaaaaaa, 0x000000, .9);
+  hemisphereLight = new THREE.AmbientLight(0xaaaaaa, 0x000000, 0.9);
 
   //shadowlight
-  shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+  shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
 
   //positie lichtbron
   shadowLight.position.set(150, 350, 350);
@@ -314,8 +335,8 @@ const createLights = () => {
 
 const createHand = () => {
   hand = new Hand();
-  hand.mesh.scale.set(.25, .25, .25);
-  hand.mesh.rotation.x = - Math.PI / 2;
+  hand.mesh.scale.set(0.25, 0.25, 0.25);
+  hand.mesh.rotation.x = -Math.PI / 2;
   hand.mesh.position.y = 100;
   scene.add(hand.mesh);
   addBandjes();
@@ -325,8 +346,9 @@ const addBandjes = () => {
   hand.addBand(aantalBandjes);
 
 
-  totalLength = (handSize + (aantalBandjes.length * 80)) / 4;
-  //console.log(totalLength);
+  totalLength = (handSize + aantalBandjes.length * 80) / 4;
+  console.log(totalLength);
+
 
 
   if (totalLength > 150) {
@@ -338,23 +360,19 @@ const handleScroll = e => {
   e.preventDefault();
   camera.position.x -= event.deltaY * 0.05;
 
-
   if (camera.position.x >= 40) {
     camera.position.x = 40;
   }
 
-  if (camera.position.x <= - totalLength + 150) {
-    camera.position.x = - totalLength + 150;
+  if (camera.position.x <= -totalLength + 150) {
+    camera.position.x = -totalLength + 150;
   }
-
-
 };
 
 const loop = () => {
   requestAnimationFrame(loop);
 
   renderer.render(scene, camera);
-
 };
 
 const projectorStart = () => {
@@ -364,7 +382,6 @@ const projectorStart = () => {
   mouseVector = new THREE.Vector3();
   //console.log(mouseVector);
 
-
   container.addEventListener(`mousemove`, onMouseMove);
 };
 
@@ -373,6 +390,7 @@ const onMouseMove = e => {
 
   mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
   mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
+
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
@@ -385,9 +403,6 @@ const onMouseMove = e => {
   } else {
     return;
   }
-
-
-
 };
 
 const detailEvent = () => {
@@ -395,7 +410,7 @@ const detailEvent = () => {
 
   console.log(intersects);
 
-  for (let i = 0;i < intersects.length;i ++) {
+  for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object.name === `band`) {
       console.log(`found`);
       console.log(intersects[i].object.info);
@@ -404,6 +419,7 @@ const detailEvent = () => {
     }
   }
 };
+
 
 const init = () => {
   threeInit();
@@ -418,4 +434,5 @@ const init = () => {
 };
 
 init();
+
 

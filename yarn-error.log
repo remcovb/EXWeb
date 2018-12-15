@@ -1,4 +1,5 @@
 Arguments: 
+<<<<<<< HEAD
   /Users/Remco/.nvm/versions/node/v7.7.2/lib/node_modules/node/bin/node /Users/Remco/.yarn/bin/yarn.js
 
 PATH: 
@@ -9,10 +10,34 @@ Yarn version:
 
 Node version: 
   10.11.0
+=======
+  /Users/Lucas/.nvm/versions/node/v9.2.0/bin/node /Users/Lucas/.yarn/bin/yarn.js
+
+PATH: 
+  /Library/Frameworks/Python.framework/Versions/3.7/bin:/Users/Lucas/.yarn/bin:/Users/Lucas/.config/yarn/global/node_modules/.bin:/Users/Lucas/.nvm/versions/node/v9.2.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Users/Lucas/.yarn/bin:/Users/Lucas/.config/yarn/global/node_modules/.bin
+
+Yarn version: 
+  1.9.2
+
+Node version: 
+  9.2.0
+>>>>>>> 65b52f0c48591926132e40d89f9281edbb1892fa
 
 Platform: 
   darwin x64
 
+<<<<<<< HEAD
+=======
+Trace: 
+  SyntaxError: /Users/Lucas/OneDrive - Hogeschool West-Vlaanderen/2018 - 2019/EXW/opdracht/files/EXWeb/package.json: Unexpected token } in JSON at position 284
+      at JSON.parse (<anonymous>)
+      at /Users/Lucas/.yarn/lib/cli.js:1130:59
+      at Generator.next (<anonymous>)
+      at step (/Users/Lucas/.yarn/lib/cli.js:92:30)
+      at /Users/Lucas/.yarn/lib/cli.js:103:13
+      at <anonymous>
+
+>>>>>>> 65b52f0c48591926132e40d89f9281edbb1892fa
 npm manifest: 
   {
     "name": "EXW",
@@ -21,7 +46,11 @@ npm manifest:
       "development": "npm run clean && NODE_ENV=development webpack-dev-server --open",
       "serve": "ws -d ./dist -c -p 3000 ",
       "clean": "rimraf ./dist",
+<<<<<<< HEAD
       "production": "npm run clean && NODE_ENV=production webpack -p"
+=======
+      "production": "npm run clean && NODE_ENV=production webpack -p",
+>>>>>>> 65b52f0c48591926132e40d89f9281edbb1892fa
     },
     "devDependencies": {
       "babel-core": "^6.21.0",
@@ -9055,6 +9084,7 @@ Lockfile:
     dependencies:
       buffer-crc32 "~0.2.3"
       fd-slicer "~1.0.1"
+<<<<<<< HEAD
 
 Trace: 
   SyntaxError: /Users/Remco/Documents/Semester 7/Experimental Web/final_opdracht/EXWeb/package.json: Unexpected token } in JSON at position 1531
@@ -9063,3 +9093,5 @@ Trace:
       at Generator.next (<anonymous>)
       at step (/Users/Remco/.yarn/lib/yarn-cli.js:91:30)
       at /Users/Remco/.yarn/lib/yarn-cli.js:102:13
+=======
+>>>>>>> 65b52f0c48591926132e40d89f9281edbb1892fa

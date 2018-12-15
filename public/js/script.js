@@ -1,8 +1,11 @@
 // const THREE = require(`three`);
-// import Hand from './classes/Hand.js';
+// import THREE from 'three';
+
+// const Hand = require(`./classes/Hand.js`);
+import Hand from './classes/Hand.js';
+
 // import firebase from 'firebase';
 
-// import Band from './classes/Band.js';
 
 
 

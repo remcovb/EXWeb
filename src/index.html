@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,10 +10,14 @@
 
   <body>
     <div class="login-container">
-      <input class="email-input email input" type="email" placeholder="Email" />
+      <input
+        class="email-input email input inputfield"
+        type="email"
+        placeholder="Email"
+      />
 
       <input
-        class="password-input password input"
+        class="password-input password input inputfield"
         type="password"
         placeholder="Password"
       />
@@ -26,30 +29,33 @@
     </div>
 
     <div class="signedin">
-      <h1 class="welcome"></h1>
-      <button class="btn btn-action hide logout">Log out</button>
-
-      <input class="band hide" type="text" placeholder="bands" />
-      <input
-        type="date"
-        class="calender hide"
-        name="trip-start"
-        value="2018-07-22"
-        min="2018-01-01"
-        max="2018-12-31"
-      />
-
-      <div class="upload-btn-wrapper">
-        <button class="btn">Upload a file</button>
-        <input type="file" class="upload hide" />
+      <div class="inlog-header-container">
+        <h1 class="welcome"></h1>
+        <button class="btn btn-action hide logout">Log out</button>
       </div>
-      <button class="btn band-button hide">voeg band toe</button>
 
-      <ul class="list"></ul>
       <div class="canvas"></div>
+
+      <div class="add-band-container">
+        <h2 class="add-band-title">Voeg een band toe</h2>
+        <form action="">
+          <input class="band inputfield hide" type="text" placeholder="bands" />
+          <input
+            type="date"
+            class="calender hide"
+            name="trip-start"
+            value="2018-07-22"
+            min="2018-01-01"
+            max="2018-12-31"
+          />
+
+          <div class="upload-btn-wrapper">
+            <button class="btn btn-img">Voeg concert foto toe</button>
+            <input type="file" class="upload hide" />
+          </div>
+          <button class="btn band-button hide">voeg band toe</button>
+        </form>
+      </div>
     </div>
   </body>
-
-
-
 </html>

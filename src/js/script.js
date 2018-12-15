@@ -83,7 +83,6 @@ const $band = document.querySelector(`.band`);
 const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
 const $upload = document.querySelector(`.upload`);
-const $list = document.querySelector(`.list`);
 
 const provider = new firebase.auth.FacebookAuthProvider();
 //provider.addScope(`email`);
@@ -221,11 +220,6 @@ const readData = user => {
     for (const key in snap.val()) {
       keydata = snap.val()[key];
       aantalBandjes.push(keydata);
-
-      const band = document.createElement(`li`);
-      band.innerHTML = keydata.band;
-
-      $list.appendChild(band);
     }
 
     threeInit();
@@ -246,7 +240,7 @@ const threeInit = () => {
 const createScene = () => {
   //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
   WIDTH = window.innerWidth;
-  HEIGHT = window.innerHeight;
+  HEIGHT = 600;
 
   scene = new THREE.Scene();
 
@@ -259,7 +253,7 @@ const createScene = () => {
   //camera positioneren
   camera.position.x = 20;
   camera.position.y = 100;
-  camera.position.z = 200;
+  camera.position.z = 160;
 
   //renderer maken
   renderer = new THREE.WebGLRenderer({

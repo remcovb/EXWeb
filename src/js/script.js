@@ -29,7 +29,8 @@ const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
-const search = `https://itunes.apple.com/search?term=jack+johnson&limit=1`;
+let prevFileLink;
+
 
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
@@ -49,7 +50,7 @@ const getJSON = (url, callback) => {
 
 const parseIt = data => {
   const result = JSON.parse(data);
-  console.log(result.results[0].previewUrl);
+  return result.results[0].previewUrl;
 };
 
 const aantalBandjes = [];
@@ -390,22 +391,32 @@ const detailEvent = () => {
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object.name === `band`) {
-      console.log(`found`);
-      console.log(intersects[i].object.info);
-
+      openConcertDetails(intersects[i].object.info)
       break;
     }
   }
 };
 
-const init = () => {
+const openConcertDetails = concert => {
+  waveForm(concert.band);
+}
+
+const waveForm = band => {
+
+  console.log(band.replace(/ /g,"+"));
+  const search = `https://itunes.apple.com/search?term=${band.replace(/ /g,"+")}&limit=1`;
   getJSON(search, (err, data) => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);
     } else {
-      parseIt(data);
+      prevFileLink = parseIt(data);
+      console.log(prevFileLink);
     }
-  });
+  });  
+}
+
+const init = () => {
+
 };
 
 init();

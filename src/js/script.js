@@ -1,4 +1,5 @@
-// const THREE = require(`three`);
+const THREE = require(`three`);
+const firebase = require(`firebase`);
 // import THREE from 'three';
 
 // const Hand = require(`./classes/Hand.js`);
@@ -188,7 +189,6 @@ const welcome = user => {
 
   databaseUser(user);
   readData(user);
-  threeInit();
 };
 
 const databaseUser = userData => {
@@ -406,6 +406,8 @@ const detailEvent = () => {
 };
 
 const init = () => {
+  threeInit();
+
   getJSON(search, (err, data) => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);

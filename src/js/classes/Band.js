@@ -1,3 +1,5 @@
+const THREE = require(`three`);
+
 class Band {
   constructor(b, pos) {
     let arm, band;

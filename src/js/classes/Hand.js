@@ -1,3 +1,5 @@
+const THREE = require(`three`);
+
 import Band from './Band.js';
 
 class Hand {

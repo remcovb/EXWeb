@@ -19,7 +19,9 @@ let container,
   intersects,
   finalFile,
   file,
-  keydata;
+  keydata,
+  dataFromUser,
+  globStorageRef;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -30,7 +32,7 @@ let hemisphereLight, shadowLight;
 
 const concertCanvas = document.querySelector(`.concertCanvas`);
 
-let concertDetail, waveCanvas, wavesurfer;
+let concertDetail, waveCanvas, wavesurfer, detailBandName, detailBandPic, storageRef;
 
 
 const getJSON = (url, callback) => {
@@ -181,6 +183,7 @@ $upload.addEventListener(`change`, e => {
 });
 
 const databaseUser = userData => {
+  dataFromUser = userData;
   $bandSubmit.addEventListener(`click`, () => {
     const bandName = $band.value;
     const date = $calender.value;
@@ -190,7 +193,8 @@ const databaseUser = userData => {
 
     const storage = firebase.storage();
 
-    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    globStorageRef = storageRef;
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
@@ -222,11 +226,6 @@ const readData = user => {
     for (const key in snap.val()) {
       keydata = snap.val()[key];
       aantalBandjes.push(keydata);
-
-      const band = document.createElement(`li`);
-      band.innerHTML = keydata.band;
-
-      $list.appendChild(band);
     }
 
     threeInit();
@@ -396,29 +395,51 @@ const openConcertDetails = concert => {
     concertDetail.remove();
   }
 
-  getSongUrl(concert.band);
+  getSongUrl(concert);
 }
 
 const getSongUrl = band => {
 
-  console.log(band.replace(/ /g,"+"));
-  const search = `https://itunes.apple.com/search?term=${band.replace(/ /g,"+")}&limit=1`;
+  const search = `https://itunes.apple.com/search?term=${band.band.replace(/ /g,"+")}&limit=1`;
   getJSON(search, (err, data) => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);
     } else {
       const prevFileLink = parseIt(data);
-      createWave(prevFileLink); 
+      createWave(prevFileLink, band); 
     }
   });
 
   
 }
 
-const createWave = songLink => {
+const createWave = (songLink, concert) => {
+  console.log(concert.img);
+  
   concertDetail = document.createElement(`div`);
   concertDetail.classList.add(`concertDetail`);
   concertCanvas.appendChild(concertDetail);
+
+  detailBandName = document.createElement(`h2`);
+  detailBandName.classList.add(`detailBandName`);
+  detailBandName.innerHTML = concert.band;
+  concertDetail.appendChild(detailBandName);
+
+
+  detailBandPic = document.createElement(`img`);
+
+  const storage = firebase.storage();
+  const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
+
+  storageRef = storage.ref(`${dataFromUser.uid}`);
+
+  console.log(storageRef);
+  
+  storageRef.child(concert.img).getDownloadURL().then(url => {
+    detailBandPic.src = url;
+  });
+
+  concertDetail.appendChild(detailBandPic);
 
   waveCanvas = document.createElement(`div`);
   waveCanvas.classList.add(`waveForm`);

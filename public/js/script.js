@@ -1,6 +1,11 @@
-const THREE = require(`three`);
+// const THREE = require(`three`);
+// import THREE from 'three';
+
+// const Hand = require(`./classes/Hand.js`);
 import Hand from './classes/Hand.js';
-//import Band from './classes/Band.js';
+
+// import firebase from 'firebase';
+
 
 
 
@@ -40,7 +45,6 @@ const aantalBandjes = [
 //Als er een fout zit in de facebook login is dit waarschijnlijk
 //de URL die moet aangepast worden in Facebook developer site
 
-import firebase from 'firebase';
 // import {loopback} from 'ip';
 
 
@@ -159,8 +163,6 @@ const welcome = user => {
   databaseUser(user);
   readData(user);
   threeInit();
-
-
 };
 
 const databaseUser = userData => {
@@ -194,6 +196,9 @@ const readData = user => {
   );
 };
 
+
+//THREEJS
+
 const threeInit = () => {
   createScene();
   createLights();
@@ -207,9 +212,6 @@ const createScene = () => {
   //welcomeDivHeight = document.querySelector(`.welcomeDiv`).innerHeight;
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
-
-  console.log(HEIGHT);
-
 
 
   scene = new THREE.Scene();
@@ -298,7 +300,7 @@ const addBandjes = () => {
 
 
   totalLength = (handSize + (aantalBandjes.length * 80)) / 4;
-  console.log(totalLength);
+  //console.log(totalLength);
 
 
   if (totalLength > 150) {
@@ -331,10 +333,10 @@ const loop = () => {
 
 const projectorStart = () => {
   rayCaster = new THREE.Raycaster();
-  console.log(rayCaster);
+  //console.log(rayCaster);
 
   mouseVector = new THREE.Vector3();
-  console.log(mouseVector);
+  //console.log(mouseVector);
 
 
   container.addEventListener(`mousemove`, onMouseMove);
@@ -345,7 +347,6 @@ const onMouseMove = e => {
 
   mouseVector.x = (e.layerX / renderer.domElement.clientWidth) * 2 - 1;
   mouseVector.y = - (e.layerY / renderer.domElement.clientHeight) * 2 + 1;
-  //console.log(mouseVector.x, mouseVector.y);
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
@@ -372,7 +373,6 @@ const detailEvent = () => {
     if (intersects[i].object.name === `band`) {
       console.log(`found`);
       console.log(intersects[i].object.info);
-
 
       break;
     }

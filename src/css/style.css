@@ -171,3 +171,7 @@ form {
   font-weight: bold;
   margin-bottom: 5rem;
 }
+
+.canvas {
+  position: absolute;
+}

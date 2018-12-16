@@ -48,7 +48,7 @@ const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
   xhr.open(`GET`, url, true);
   xhr.setRequestHeader(
-    "Access-Control-Allow-Origin", "http://willemslucasbe.webhosting.be/"
+    "Access-Control-Allow-Origin", "*"
   );  
   xhr.withCredentials = true;
 
@@ -197,6 +197,7 @@ const welcome = user => {
   }
 
   databaseUser(user);
+  
   readData(user);
 };
 
@@ -212,7 +213,10 @@ $upload.addEventListener(`change`, e => {
 
 const databaseUser = userData => {
   dataFromUser = userData;
-  $bandSubmit.addEventListener(`click`, () => {
+  $bandSubmit.addEventListener(`click`, e => {
+    e.preventDefault();
+    console.log(e);
+    
     const bandName = $band.value;
     const date = $calender.value;
     const location = $location.value;
@@ -226,12 +230,13 @@ const databaseUser = userData => {
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
+    console.log(file);
 
-    const task = storageRef.put(file);
 
-    task.then(function reload() {
-      location.reload();
-    });
+    let task = storageRef.put(file)
+      .then(function reload() {
+        location.reload();
+      });
 
     console.log($calender);
 
@@ -472,9 +477,11 @@ const createWave = (songLink, concert) => {
   detailBandPic.classList.add(`img-selected`);
 
   const storage = firebase.storage();
-  const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
+  //const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
 
   storageReff = storage.ref(`${dataFromUser.uid}`);
+  
+  
 
   storageReff
     .child(concert.img)

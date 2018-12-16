@@ -140,6 +140,11 @@ form {
   margin-left: 2rem;
 }
 
+.location {
+  margin-left: 3rem;
+  width: 30rem;
+}
+
 .calender {
   margin-left: 3rem;
   width: 30rem;
@@ -174,5 +179,47 @@ form {
 }
 
 .canvas {
-  position: absolute;
+  position: inherit;
+}
+
+.wave-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.wave-form {
+  margin-left: 5rem;
+}
+
+.concert-detail {
+  background-color: white;
+  border-left: 10rem solid #1c1c1e;
+  border-right: 10rem solid #1c1c1e;
+}
+
+.detail-band-name {
+  color: #1c1c1e;
+  font-family: helvetica;
+  font-weight: bold;
+  font-size: 3rem;
+  text-transform: capitalize;
+  margin-left: 2rem;
+  padding-top: 4rem;
+}
+
+.img-selected {
+  width: 40rem;
+  clip: rect(10px, 190px, 190px, 10px);
+}
+
+.concert-date {
+  color: #1c1c1e;
+  font-family: helvetica;
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-left: 2rem;
 }

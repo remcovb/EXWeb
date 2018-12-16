@@ -214,8 +214,8 @@ $upload.addEventListener(`change`, e => {
 const databaseUser = userData => {
   dataFromUser = userData;
   $bandSubmit.addEventListener(`click`, e => {
-    e.preventDefault();
     console.log(e);
+    e.preventDefault();
     
     const bandName = $band.value;
     const date = $calender.value;
@@ -231,7 +231,6 @@ const databaseUser = userData => {
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
     console.log(file);
-
 
     let task = storageRef.put(file)
       .then(function reload() {

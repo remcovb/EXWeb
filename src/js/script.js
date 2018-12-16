@@ -456,39 +456,35 @@ const createWave = (songLink, concert) => {
   const playPauseBtn = document.createElement(`a`);
   playPauseBtn.classList.add(`btn`);
   playPauseBtn.innerHTML = `play`;
-  playPauseBtn.onclick = playOrPause;
 
   concertDetail.appendChild(waveCanvas);
 
 
   if (fileExists === true) {
     wavesurfer = WaveSurfer.create({
-      container: `#waveform`
+      container: `#waveform`,
+      progressColor: `#4a00e0`,
     });  
     
     wavesurfer.load(songLink);
   
     wavesurfer.on(`ready`, () => {
       concertDetail.appendChild(playPauseBtn);
-      playPauseBtn.addEventListener(`click`, playOrPause);
+      playPauseBtn.addEventListener(`click`, e => {
+        wavesurfer.playPause(); 
+
+        if (isPlaying === false) {
+          isPlaying = true;
+          playPauseBtn.innerHTML = `pause`;    
+        } else {
+          isPlaying = false;   
+          playPauseBtn.innerHTML = `play`;    
+        }
+      });
     });  
   }
 
 };
-
-const playOrPause = e => {
-      e.preventDefault;
-      
-      if (isPlaying = false) {
-        console.log(e);
-        wavesurfer.play(); 
-        isPlaying = true;       
-      } else {
-        wavesurfer.pause(); 
-        isPlaying = true;     
-      }
-
-}
 
 const init = () => {
  

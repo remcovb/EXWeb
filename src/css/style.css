@@ -1,5 +1,10 @@
 @import 'reset.css';
 
+.logo {
+  width: 50rem;
+  margin-bottom: 5rem;
+}
+
 .login-container {
   display: flex;
   flex-flow: column;
@@ -59,12 +64,19 @@
   font-weight: bold;
 }
 
+
+.btn:hover {
+  box-shadow: 5px 5px 5px rgba(14, 14, 14, 0.2);
+  cursor: pointer;
+}
+
 .leftBtn, .rightBtn {
   width: 4rem;
 }
 
 .leftBtn {
   transform: rotate(180deg);
+
 }
 
 .facebook {
@@ -224,7 +236,7 @@ form {
 
 .img-selected {
   width: 40rem;
-  clip: rect(10px, 190px, 190px, 10px);
+  clip-path: rect(10px, 20px, 30px, 40px);
 }
 
 .concert-date {
@@ -233,4 +245,35 @@ form {
   font-size: 2rem;
   margin-top: 2rem;
   margin-left: 2rem;
+}
+
+.progressbar {
+  background-color: aliceblue;
+  appearance: none;
+  border: 0.1rem solid white;
+  border-radius: 3rem;
+  width: 20rem;
+  position: fixed;
+}
+
+.play-pause {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+
+.formval-email {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.formval-password {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 2rem;
 }

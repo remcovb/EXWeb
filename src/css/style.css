@@ -23,7 +23,7 @@
   height: 2rem;
 }
 
-.email {
+.inputfield {
   height: 3rem;
   padding-bottom: 0.7rem;
   background-color: transparent;
@@ -35,26 +35,6 @@
   &::placeholder {
     color: white;
     opacity: 0.6;
-  }
-
-  &:focus {
-    outline: 0;
-  }
-}
-
-.password {
-  height: 3rem;
-  background-color: transparent;
-  padding-bottom: 0.7rem;
-  margin-top: 3rem;
-  border: none;
-  color: white;
-  font-size: 1.8rem;
-  font-weight: 500;
-  border-bottom: 0.4rem solid #4a00e0;
-  &::placeholder {
-    color: white;
-    opacity: 0.7;
   }
 
   &:focus {
@@ -121,4 +101,125 @@
   left: 0;
   top: 0;
   opacity: 0;
+}
+
+.inlog-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 8rem;
+}
+
+.welcome {
+  margin-left: 2rem;
+}
+
+.logout {
+  width: 10rem;
+  font-size: 1.2rem;
+  margin-right: 2rem;
+}
+
+.add-band-container {
+  height: 30rem;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  align-content: center;
+}
+
+.band {
+  width: 30rem;
+  margin-left: 2rem;
+}
+
+.location {
+  margin-left: 3rem;
+  width: 30rem;
+}
+
+.calender {
+  margin-left: 3rem;
+  width: 30rem;
+  font-family: helvetica;
+  height: 3rem;
+  font-size: 1.8rem;
+  border: none;
+  border-bottom: 0.4rem solid #4a00e0;
+  color: white;
+  background-color: transparent;
+}
+
+.upload-btn-wrapper {
+  margin-left: 3rem;
+}
+
+.btn-img {
+  background: none;
+  border: 0.4rem solid #4a00e0;
+}
+
+.band-button {
+  margin-left: 3rem;
+}
+
+.add-band-title {
+  color: white;
+  font-size: 3rem;
+  font-family: helvetica;
+  font-weight: bold;
+  margin-bottom: 5rem;
+}
+
+.canvas {
+  position: inherit;
+}
+
+.wave-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.wave-form {
+  margin-left: 5rem;
+}
+
+.concert-detail {
+  background-color: white;
+  border-left: 10rem solid #1c1c1e;
+  border-right: 10rem solid #1c1c1e;
+}
+
+.detail-band-name {
+  color: #1c1c1e;
+  font-family: helvetica;
+  font-weight: bold;
+  font-size: 3rem;
+  text-transform: capitalize;
+  margin-left: 2rem;
+  padding-top: 4rem;
+}
+
+.img-selected {
+  width: 40rem;
+  clip: rect(10px, 190px, 190px, 10px);
+}
+
+.concert-date {
+  color: #1c1c1e;
+  font-family: helvetica;
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-left: 2rem;
 }

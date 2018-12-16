@@ -39,6 +39,15 @@ let concertDetail, waveCanvas, wavesurfer, detailBandName, detailBandPic, storag
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
   xhr.open(`GET`, url, true);
+  xhr.setRequestHeader(
+    "Access-Control-Allow-Origin", "http://willemslucasbe.webhosting.be/"
+  );  
+  xhr.withCredentials = true;
+
+
+  const allHeaders = xhr.getAllResponseHeaders()
+  console.log(allHeaders);
+  
   xhr.responseType = `jsonp`;
   xhr.onload = () => {
     const status = xhr.status;

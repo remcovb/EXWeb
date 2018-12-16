@@ -59,6 +59,14 @@
   font-weight: bold;
 }
 
+.leftBtn, .rightBtn {
+  width: 4rem;
+}
+
+.leftBtn {
+  transform: rotate(180deg);
+}
+
 .facebook {
   z-index: 1;
 }
@@ -73,10 +81,6 @@
   width: 2rem;
   height: 2rem;
   margin-left: -3.5rem;
-}
-
-.canvas {
-  position: absolute;
 }
 
 .signedin {
@@ -180,6 +184,13 @@ form {
 
 .canvas {
   position: inherit;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.threeControls {
+  display:flex;
+  justify-content: space-around;
 }
 
 .wave-container {

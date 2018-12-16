@@ -364,9 +364,41 @@ const addBandjes = () => {
   console.log(totalLength);
 
   if (totalLength > 150) {
-    container.addEventListener(`wheel`, handleScroll);
+    // container.addEventListener(`wheel`, handleScroll);
+    addButtons();
   }
+
+
 };
+
+const addButtons = () => {
+  const scrollControls = document.querySelector(`.threeControls`);
+
+  const scrollLeft = document.createElement(`button`);
+  scrollLeft.classList = `btn leftBtn`;
+  scrollLeft.innerHTML = `&#9655`;
+  scrollLeft.addEventListener(`click`, () => {
+    if (camera.position.x <= -totalLength + 200) {
+      camera.position.x = -totalLength + 200;
+    } else {
+      camera.position.x -= 50;
+    }
+  })
+  scrollControls.appendChild(scrollLeft);
+
+
+  const scrollRight = document.createElement(`button`);
+  scrollRight.classList = `btn rightBtn`;
+  scrollRight.innerHTML = `&#9655`;
+  scrollRight.addEventListener(`click`, () => {
+    if (camera.position.x >= 0) {
+      camera.position.x = 0;
+    } else {
+      camera.position.x += 50;
+    }
+  })
+  scrollControls.appendChild(scrollRight);
+}
 
 const handleScroll = e => {
   e.preventDefault();

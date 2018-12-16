@@ -38,7 +38,7 @@ let concertDetail,
   wavesurfer,
   detailBandName,
   detailBandPic,
-  storageRef,
+  storageReff,
   concertData,
   concertTitle,
   wave,
@@ -222,7 +222,7 @@ const databaseUser = userData => {
 
     const storage = firebase.storage();
 
-    storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
@@ -474,9 +474,9 @@ const createWave = (songLink, concert) => {
   const storage = firebase.storage();
   const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
 
-  storageRef = storage.ref(`${dataFromUser.uid}`);
+  storageReff = storage.ref(`${dataFromUser.uid}`);
 
-  storageRef
+  storageReff
     .child(concert.img)
     .getDownloadURL()
     .then(url => {

@@ -22,7 +22,8 @@ let container,
   keydata,
   dataFromUser,
   isPlaying = false,
-  fileExists;
+  fileExists,
+  storageRef2;
 
 let hand, totalLength;
 const handSize = 615.891;
@@ -38,7 +39,7 @@ let concertDetail,
   wavesurfer,
   detailBandName,
   detailBandPic,
-  storageReff,
+  storageRef,
   concertData,
   concertTitle,
   wave,
@@ -47,15 +48,6 @@ let concertDetail,
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
   xhr.open(`GET`, url, true);
-  xhr.setRequestHeader(
-    "Access-Control-Allow-Origin", "http://willemslucasbe.webhosting.be/"
-  );  
-  xhr.withCredentials = true;
-
-
-  const allHeaders = xhr.getAllResponseHeaders()
-  console.log(allHeaders);
-  
   xhr.responseType = `jsonp`;
   xhr.onload = () => {
     const status = xhr.status;
@@ -99,6 +91,7 @@ const config = {
 };
 firebase.initializeApp(config);
 const db = firebase.database();
+const storage = firebase.storage();
 
 const $home = document.querySelector(`.login-container`);
 const $welcome = document.querySelector(`.welcome`);
@@ -205,6 +198,7 @@ const welcome = user => {
 
 $upload.addEventListener(`change`, e => {
   file = e.target.files[0];
+  console.log(file);
 
   const fileName = file.name.split(` `).join(``);
 
@@ -222,13 +216,10 @@ const databaseUser = userData => {
 
     console.log(finalFile);
 
-    const storage = firebase.storage();
-
-    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    storageRef = storage.ref();
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
-
     console.log(file);
 
     storageRef.put(file).then(function reload() {
@@ -473,11 +464,11 @@ const createWave = (songLink, concert) => {
   detailBandPic.classList.add(`img-selected`);
 
   const storage = firebase.storage();
-  const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
+  //const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
 
-  storageReff = storage.ref(`${dataFromUser.uid}`);
+  storageRef2 = storage.ref(`${dataFromUser.uid}`);
 
-  storageReff
+  storageRef2
     .child(concert.img)
     .getDownloadURL()
     .then(url => {

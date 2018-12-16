@@ -1,11 +1,8 @@
 const THREE = require(`three`);
 const firebase = require(`firebase`);
-// import THREE from 'three';
+const WaveSurfer = require(`wavesurfer`);
 
-// const Hand = require(`./classes/Hand.js`);
 import Hand from './classes/Hand.js';
-
-// import firebase from 'firebase';
 
 let container,
   renderer,
@@ -22,14 +19,22 @@ let container,
   intersects,
   finalFile,
   file,
-  keydata;
+  keydata,
+  dataFromUser,
+  isPlaying = false,
+  fileExists;
 
 let hand, totalLength;
 const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
 
-const search = `https://itunes.apple.com/search?term=jack+johnson&limit=1`;
+/*Webaudio*/
+
+const concertCanvas = document.querySelector(`.concertCanvas`);
+
+let concertDetail, waveCanvas, wavesurfer, detailBandName, detailBandPic, storageRef;
+
 
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
@@ -44,12 +49,20 @@ const getJSON = (url, callback) => {
     }
   };
   xhr.send();
-  console.log(xhr);
 };
 
 const parseIt = data => {
   const result = JSON.parse(data);
-  console.log(result.results[0].previewUrl);
+  
+  
+  if (result.resultCount != 0) {
+    fileExists = true;
+    return result.results[0].previewUrl;    
+  } else {
+    console.log(`artist not in itunes library`);
+    fileExists = false;
+    return; 
+  }
 };
 
 const aantalBandjes = [];
@@ -179,6 +192,7 @@ $upload.addEventListener(`change`, e => {
 });
 
 const databaseUser = userData => {
+  dataFromUser = userData;
   $bandSubmit.addEventListener(`click`, () => {
     const bandName = $band.value;
     const date = $calender.value;
@@ -188,7 +202,7 @@ const databaseUser = userData => {
 
     const storage = firebase.storage();
 
-    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    storageRef = storage.ref(`${userData.uid}/${finalFile}`);
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
@@ -350,10 +364,8 @@ const loop = () => {
 
 const projectorStart = () => {
   rayCaster = new THREE.Raycaster();
-  //console.log(rayCaster);
 
   mouseVector = new THREE.Vector3();
-  //console.log(mouseVector);
 
   container.addEventListener(`mousemove`, onMouseMove);
 };
@@ -366,9 +378,7 @@ const onMouseMove = e => {
 
   rayCaster.setFromCamera(mouseVector, camera);
   intersects = rayCaster.intersectObjects(hand.mesh.children, true);
-  //console.log(hand.mesh.children);
 
-  //console.log(intersects);
 
   if (intersects.length !== 0) {
     document.addEventListener(`click`, detailEvent);
@@ -378,28 +388,109 @@ const onMouseMove = e => {
 };
 
 const detailEvent = () => {
-  console.log(`click`);
-
-  console.log(intersects);
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object.name === `band`) {
-      console.log(`found`);
-      console.log(intersects[i].object.info);
-
+      openConcertDetails(intersects[i].object.info)
       break;
     }
   }
 };
 
-const init = () => {
+const openConcertDetails = concert => {  
+  
+  if (concertCanvas.children.length > 0) { 
+    concertDetail.remove();
+  }
+
+  getSongUrl(concert);
+}
+
+const getSongUrl = band => {
+
+  const search = `https://itunes.apple.com/search?term=${band.band.replace(/ /g,"+")}&limit=1`;
   getJSON(search, (err, data) => {
     if (err !== null) {
       console.log(`Something went wrong: ${err}`);
     } else {
-      parseIt(data);
+      const prevFileLink = parseIt(data);
+      createWave(prevFileLink, band); 
     }
   });
+
+  
+}
+
+const createWave = (songLink, concert) => {
+  console.log(concert.img);
+  
+  concertDetail = document.createElement(`div`);
+  concertDetail.classList.add(`concertDetail`);
+  concertCanvas.appendChild(concertDetail);
+
+  detailBandName = document.createElement(`h2`);
+  detailBandName.classList.add(`detailBandName`);
+  detailBandName.innerHTML = concert.band;
+  concertDetail.appendChild(detailBandName);
+
+
+  detailBandPic = document.createElement(`img`);
+
+  const storage = firebase.storage();
+  const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
+
+  storageRef = storage.ref(`${dataFromUser.uid}`);
+
+  
+  storageRef.child(concert.img).getDownloadURL().then(url => {
+    detailBandPic.src = url;
+  });
+
+  concertDetail.appendChild(detailBandPic);
+
+  waveCanvas = document.createElement(`div`);
+  waveCanvas.classList.add(`waveForm`);
+  waveCanvas.id = `waveform`;
+
+  const playPauseBtn = document.createElement(`a`);
+  playPauseBtn.classList.add(`btn`);
+  playPauseBtn.innerHTML = `play`;
+  playPauseBtn.onclick = playOrPause;
+
+  concertDetail.appendChild(waveCanvas);
+
+
+  if (fileExists === true) {
+    wavesurfer = WaveSurfer.create({
+      container: `#waveform`
+    });  
+    
+    wavesurfer.load(songLink);
+  
+    wavesurfer.on(`ready`, () => {
+      concertDetail.appendChild(playPauseBtn);
+      playPauseBtn.addEventListener(`click`, playOrPause);
+    });  
+  }
+
+};
+
+const playOrPause = e => {
+      e.preventDefault;
+      
+      if (isPlaying = false) {
+        console.log(e);
+        wavesurfer.play(); 
+        isPlaying = true;       
+      } else {
+        wavesurfer.pause(); 
+        isPlaying = true;     
+      }
+
+}
+
+const init = () => {
+ 
 };
 
 init();

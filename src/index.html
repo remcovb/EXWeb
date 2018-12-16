@@ -1,36 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+    <title>Festival</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-  <title>Festival</title>
-</head>
+  <body>
+    <div class="login-container">
+      <img class="logo" src="assets/img/logo.png" alt="" />
+      <p class="formval-email"></p>
+      <input
+        class="email-input email input inputfield"
+        type="email"
+        placeholder="Email"
+      />
 
-<body>
+      <p class="formval-password"></p>
+      <input
+        class="password-input password input inputfield"
+        type="password"
+        placeholder="Password"
+      />
+      <div class="login-buttons">
+        <button class="btn btn-action login input">Log in</button>
 
-  <div>
-    <h1 class="welcome"></h1>
-    <h2 class="user"></h2>
-    <input class="email-input email" type="email" placeholder="Email">
+        <button class="btn btn-secondary signup input">Sign up</button>
+        <button class="btn btn-action facebook input">
+          Log in met Facebook
+        </button>
+      </div>
+    </div>
 
-    <input class="password-input password" type="password" placeholder="Password">
+    <div class="signedin hide">
+      <div class="inlog-header-container">
+        <h1 class="welcome"></h1>
+        <button class="btn btn-action hide logout">Log out</button>
+      </div>
 
+      <div class="canvas">
+        <div class="threeControls"></div>
+      </div>
+      <div class="concert-canvas"></div>
 
-    <button class="btn btn-action login">Log in</button>
-    <button class="btn btn-secondary signup">Sign up</button>
-    <button class="btn btn-action facebook">facebook</button>
-    <button class="btn btn-action hide logout">Log out</button>
+      <div class="add-band-container">
+        <h2 class="add-band-title">Voeg een band toe</h2>
+        <form action="">
+          <input class="band inputfield hide" type="text" placeholder="bands" />
+          <input
+            class="location inputfield hide"
+            type="text"
+            placeholder="Locatie"
+          />
+          <input
+            type="date"
+            class="calender hide"
+            name="trip-start"
+            value="2018-07-22"
+            min="2018-01-01"
+            max="2018-12-31"
+          />
 
-    <input class="band hide" type="text" placeholder="bands">
-    <input type="date" class="calender" name="trip-start" value="2018-07-22" min="2018-01-01" max="2018-12-31">
-    <button class="band-button hide">voeg band toe</button>
-
-
-  </div>
-
-</body>
-
+          <div class="upload-btn-wrapper">
+            <button class="btn btn-img">Voeg concert foto toe</button>
+            <input type="file" class="upload hide" />
+          </div>
+          <button class="btn band-button hide">voeg band toe</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

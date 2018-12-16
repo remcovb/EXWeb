@@ -61,7 +61,6 @@ const config = {
       errors: true,
       warnings: true
     },
-
     port
 
   },

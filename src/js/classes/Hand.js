@@ -1,6 +1,7 @@
 const THREE = require(`three`);
 
 import Band from './Band.js';
+let pos;
 
 class Hand {
   constructor() {
@@ -34,7 +35,7 @@ class Hand {
 
   
   addBand(bandjes) {
-    let pos = 0;
+    pos = 0;
     bandjes.forEach(b => {
       const band = new Band(b, pos);
       
@@ -43,6 +44,18 @@ class Hand {
       pos = pos - 80;
       
     });      
+  }
+
+  addSingleBand(concertDetail) {
+    console.log(concertDetail, pos);
+
+    const band = new Band(concertDetail, pos);
+
+    this.mesh.add(band.mesh);  
+
+
+    pos = pos - 80;
+    
   }
 }
 

@@ -279,8 +279,11 @@ const readData = user => {
       aantalBandjes.push(keydata);
     }
 
-    threeInit();
-    console.log(aantalBandjes);
+    if (!container) {
+      threeInit();      
+    } else {
+      hand.addSingleBand(keydata);
+    }
   });
 };
 
@@ -380,11 +383,6 @@ const addBandjes = () => {
 
   totalLength = (handSize + aantalBandjes.length * 80) / 4;
   console.log(totalLength);
-
-  if (totalLength > 150) {
-    // container.addEventListener(`wheel`, handleScroll);
-    addButtons();
-  }
 
 
 };
@@ -513,14 +511,16 @@ const createWave = (songLink, concert) => {
   detailBandName.innerHTML = concert.band;
   concertTitle.appendChild(detailBandName);
 
+  locationData = document.createElement(`p`);
+  locationData.classList.add(`concert-location`);
+  locationData.innerHTML = concert.location;
+  concertTitle.appendChild(locationData);
+
   concertData = document.createElement(`p`);
   concertData.classList.add(`concert-date`);
   concertData.innerHTML = concert.date;
   concertTitle.appendChild(concertData);
-
-  locationData = document.createElement(`p`);
-  locationData.classList.add(`concert-location`);
-  locationData.innerHTML = concert.location;
+  
 
   detailBandPic = document.createElement(`img`);
   detailBandPic.classList.add(`img-selected`);
@@ -578,6 +578,8 @@ const createWave = (songLink, concert) => {
   }
 };
 
-const init = () => {};
+const init = () => {
+  addButtons();
+};
 
 init();

@@ -64,19 +64,18 @@
   font-weight: bold;
 }
 
-
 .btn:hover {
   box-shadow: 5px 5px 5px rgba(14, 14, 14, 0.2);
   cursor: pointer;
 }
 
-.leftBtn, .rightBtn {
+.leftBtn,
+.rightBtn {
   width: 4rem;
 }
 
 .leftBtn {
   transform: rotate(180deg);
-
 }
 
 .facebook {
@@ -201,7 +200,7 @@ form {
 }
 
 .threeControls {
-  display:flex;
+  display: flex;
   justify-content: space-around;
 }
 
@@ -222,6 +221,12 @@ form {
   background-color: white;
   border-left: 10rem solid #1c1c1e;
   border-right: 10rem solid #1c1c1e;
+}
+
+.concert-location {
+  margin-left: 2rem;
+  font-size: 2rem;
+  margin-top: 1rem;
 }
 
 .detail-band-name {
@@ -276,4 +281,8 @@ form {
   color: white;
   font-size: 1.2rem;
   margin-top: 2rem;
+}
+
+.threeControls {
+  margin-bottom: 5rem;
 }

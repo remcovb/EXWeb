@@ -25,6 +25,7 @@ let container,
   fileExists;
 
 let hand, totalLength;
+
 const handSize = 615.891;
 
 let hemisphereLight, shadowLight;
@@ -47,15 +48,12 @@ let concertDetail,
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
   xhr.open(`GET`, url, true);
-  xhr.setRequestHeader(
-    "Access-Control-Allow-Origin", "*"
-  );  
+  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
   xhr.withCredentials = true;
 
-
-  const allHeaders = xhr.getAllResponseHeaders()
+  const allHeaders = xhr.getAllResponseHeaders();
   console.log(allHeaders);
-  
+
   xhr.responseType = `jsonp`;
   xhr.onload = () => {
     const status = xhr.status;
@@ -113,6 +111,9 @@ const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
 const $upload = document.querySelector(`.upload`);
 const $location = document.querySelector(`.location`);
+const $signedin = document.querySelector(`.signedin`);
+const $emailForm = document.querySelector(`.formval-email`);
+const $passwordForm = document.querySelector(`.formval-password`);
 
 const provider = new firebase.auth.FacebookAuthProvider();
 //provider.addScope(`email`);
@@ -132,8 +133,26 @@ $login.addEventListener(`click`, () => {
   //sign in
   const promise = auth.signInWithEmailAndPassword(email, password);
 
-  promise.catch(e => console.log(e.message));
+  promise.catch(e => formvalidation(e));
 });
+
+const formvalidation = e => {
+  console.log(e.message);
+  if (e.message === 'The email address is badly formatted.') {
+    $emailForm.innerHTML = 'Email is al gebruikt of fout ingevoerd';
+  } else {
+    $emailForm.innerHTML = '';
+  }
+
+  if (
+    e.message ===
+    'The password is invalid or the user does not have a password.'
+  ) {
+    $passwordForm.innerHTML = 'Gelieve je paswoord invullen';
+  } else {
+    $passwordForm.innerHTML = '';
+  }
+};
 
 //signup
 $signup.addEventListener(`click`, () => {
@@ -169,6 +188,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $calender.classList.remove(`hide`);
     $upload.classList.remove(`hide`);
     $location.classList.remove(`hide`);
+    $signedin.classList.remove(`hide`);
 
     welcome(firebaseUser);
   } else {
@@ -185,6 +205,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $calender.classList.add(`hide`);
     $upload.classList.add(`hide`);
     $location.classList.add(`hide`);
+    $signedin.classList.add(`hide`);
     console.log(`not logged`);
   }
 });
@@ -197,7 +218,7 @@ const welcome = user => {
   }
 
   databaseUser(user);
-  
+
   readData(user);
 };
 
@@ -216,7 +237,7 @@ const databaseUser = userData => {
   $bandSubmit.addEventListener(`click`, e => {
     console.log(e);
     e.preventDefault();
-    
+
     const bandName = $band.value;
     const date = $calender.value;
     const location = $location.value;
@@ -232,10 +253,7 @@ const databaseUser = userData => {
     console.log(finalFile);
     console.log(file);
 
-    let task = storageRef.put(file)
-      .then(function reload() {
-        location.reload();
-      });
+    storageRef.put(file);
 
     console.log($calender);
 
@@ -479,8 +497,6 @@ const createWave = (songLink, concert) => {
   //const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
 
   storageReff = storage.ref(`${dataFromUser.uid}`);
-  
-  
 
   storageReff
     .child(concert.img)
@@ -498,8 +514,9 @@ const createWave = (songLink, concert) => {
   waveCanvas.id = `waveform`;
 
   const playPauseBtn = document.createElement(`a`);
+  playPauseBtn.classList.add(`play-pause`);
   playPauseBtn.classList.add(`btn`);
-  playPauseBtn.innerHTML = `play`;
+  playPauseBtn.innerHTML = `&#9654;`;
 
   wave.appendChild(waveCanvas);
 
@@ -513,16 +530,16 @@ const createWave = (songLink, concert) => {
     wavesurfer.load(songLink);
 
     wavesurfer.on(`ready`, () => {
-      wave.appendChild(playPauseBtn);
+      waveCanvas.appendChild(playPauseBtn);
       playPauseBtn.addEventListener(`click`, e => {
         wavesurfer.playPause();
 
         if (isPlaying === false) {
           isPlaying = true;
-          playPauseBtn.innerHTML = `pause`;
+          playPauseBtn.innerHTML = `&#10073; &#10073;`;
         } else {
           isPlaying = false;
-          playPauseBtn.innerHTML = `play`;
+          playPauseBtn.innerHTML = `&#9654;`;
         }
       });
     });

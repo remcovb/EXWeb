@@ -10,12 +10,15 @@
 
   <body>
     <div class="login-container">
+      <img class="logo" src="assets/img/logo.png" alt="" />
+      <p class="formval-email"></p>
       <input
         class="email-input email input inputfield"
         type="email"
         placeholder="Email"
       />
 
+      <p class="formval-password"></p>
       <input
         class="password-input password input inputfield"
         type="password"
@@ -23,6 +26,7 @@
       />
       <div class="login-buttons">
         <button class="btn btn-action login input">Log in</button>
+
         <button class="btn btn-secondary signup input">Sign up</button>
         <button class="btn btn-action facebook input">
           Log in met Facebook
@@ -30,7 +34,7 @@
       </div>
     </div>
 
-    <div class="signedin">
+    <div class="signedin hide">
       <div class="inlog-header-container">
         <h1 class="welcome"></h1>
         <button class="btn btn-action hide logout">Log out</button>

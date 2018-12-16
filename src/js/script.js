@@ -104,6 +104,7 @@ const $calender = document.querySelector(`.calender`);
 const $bandSubmit = document.querySelector(`.band-button`);
 const $upload = document.querySelector(`.upload`);
 const $location = document.querySelector(`.location`);
+const $logoutContainer = document.querySelector(`.signedin`);
 
 const provider = new firebase.auth.FacebookAuthProvider();
 //provider.addScope(`email`);
@@ -160,6 +161,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $calender.classList.remove(`hide`);
     $upload.classList.remove(`hide`);
     $location.classList.remove(`hide`);
+    $logoutContainer.classList.remove(`hide`);
 
     welcome(firebaseUser);
   } else {
@@ -176,6 +178,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     $calender.classList.add(`hide`);
     $upload.classList.add(`hide`);
     $location.classList.add(`hide`);
+    $logoutContainer.classList.add(`hide`);
     console.log(`not logged`);
   }
 });
@@ -209,7 +212,6 @@ const databaseUser = userData => {
     const location = $location.value;
 
     console.log(finalFile);
-    console.log(file);
 
     const storage = firebase.storage();
 
@@ -218,9 +220,9 @@ const databaseUser = userData => {
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
 
-    const task = storageRef.put(file);
+    console.log(file);
 
-    task.then(function reload() {
+    storageRef.put(file).then(function reload() {
       location.reload();
     });
 
@@ -231,11 +233,9 @@ const databaseUser = userData => {
     db.ref(`users/${userData.uid}/${newPostKey}`).set({
       band: bandName,
       date: date,
-      location: location,
-      img: finalFile
+      img: finalFile,
+      location: location
     });
-
-    // ;
   });
 };
 
@@ -458,6 +458,7 @@ const createWave = (songLink, concert) => {
   locationData = document.createElement(`p`);
   locationData.classList.add(`concert-location`);
   locationData.innerHTML = concert.location;
+  concertTitle.appendChild(locationData);
 
   detailBandPic = document.createElement(`img`);
   detailBandPic.classList.add(`img-selected`);

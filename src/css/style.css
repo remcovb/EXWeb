@@ -59,6 +59,14 @@
   font-weight: bold;
 }
 
+.concert-location {
+  margin-left: 2rem;
+  font-size: 2rem;
+  font-family: helvetica;
+  text-transform: capitalize;
+  margin-top: 1rem;
+}
+
 .facebook {
   z-index: 1;
 }

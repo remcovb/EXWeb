@@ -38,7 +38,7 @@ let concertDetail,
   wavesurfer,
   detailBandName,
   detailBandPic,
-  storageRef,
+  storageReff,
   concertData,
   concertTitle,
   wave,
@@ -47,6 +47,15 @@ let concertDetail,
 const getJSON = (url, callback) => {
   const xhr = new XMLHttpRequest();
   xhr.open(`GET`, url, true);
+  xhr.setRequestHeader(
+    "Access-Control-Allow-Origin", "http://willemslucasbe.webhosting.be/"
+  );  
+  xhr.withCredentials = true;
+
+
+  const allHeaders = xhr.getAllResponseHeaders()
+  console.log(allHeaders);
+  
   xhr.responseType = `jsonp`;
   xhr.onload = () => {
     const status = xhr.status;
@@ -213,7 +222,7 @@ const databaseUser = userData => {
 
     const storage = firebase.storage();
 
-    storageRef = storage.ref(`${userData.uid}/${finalFile}`);
+    const storageRef = storage.ref(`${userData.uid}/${finalFile}`);
 
     storageRef.child(`${userData.uid}/${finalFile}`);
     console.log(finalFile);
@@ -465,9 +474,9 @@ const createWave = (songLink, concert) => {
   const storage = firebase.storage();
   const pathReference = storage.ref(`${dataFromUser.uid}/${concert.img}`);
 
-  storageRef = storage.ref(`${dataFromUser.uid}`);
+  storageReff = storage.ref(`${dataFromUser.uid}`);
 
-  storageRef
+  storageReff
     .child(concert.img)
     .getDownloadURL()
     .then(url => {
